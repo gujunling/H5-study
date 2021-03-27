@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-非布尔值属性的attribute&&property</title>
+  </head>
+  <body>
+    <input type="checkbox" checked="checked" test="test" name="haha" />
+  </body>
+  <script>
+    /*
+        布尔值属性：节点的property是布尔值类型
+        非布尔值属性：节点的property是非布尔值类型
+
+    */
+
+    // 非布尔值属性    property和attribute的同步问题
+    //非布尔值属性 不论什么情况，property和attribute都会同步
+
+    let testNode = document.querySelector("input[type=checkbox]");
+    // 操作attribute
+    testNode.setAttribute("name", "haha1");
+    testNode.setAttribute("name", "haha2");
+    testNode.setAttribute("name", "haha3");
+
+    // 操作节点的property
+    testNode.name = "haha4";
+    testNode.name = "haha5";
+    testNode.name = "haha6";
+  </script>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-attribute&&property</title>
+  </head>
+  <body>
+    <input type="checkbox" checked="checked" test="test" />
+  </body>
+  <script>
+    /*
+        布尔值属性：节点的property是布尔值类型
+        非布尔值属性：节点的property是非布尔值类型
+
+    */
+
+    /* 布尔值属性    property和attribute的同步问题
+       1.改变property时不会同步attribute
+       2.在没有修改property时
+               attribute会同步property
+            一旦修改property后，
+            attribute就不会同步property
+    */
+    let testNode = document.querySelector("input[type=checkbox]");
+    // 操作attribute
+    testNode.setAttribute("checked", "checked1");
+    testNode.setAttribute("checked", "checked2");
+    testNode.setAttribute("checked", "checked3");
+
+    // 操作节点的property
+    testNode.checked = "checked4";
+    testNode.checked = "checked5";
+    testNode.checked = "checked6";
+  </script>
+</html>

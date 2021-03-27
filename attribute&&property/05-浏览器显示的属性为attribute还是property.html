@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-浏览器显示的属性为attribute还是property</title>
+  </head>
+  <body>
+    <input type="checkbox" />
+    <input type="button" value="qwe" />
+  </body>
+  <script type="text/javascript">
+    // 浏览器只认property，即只有property的值才会被浏览器显示
+    let testNode = document.querySelector("input[type=checkbox]");
+
+    let btnNode = document.querySelector("input[type=button]");
+    btnNode.onclick = function () {
+      testNode.checked = true;
+    };
+  </script>
+</html>

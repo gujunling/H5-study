@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-attribute</title>
+  </head>
+  <body>
+    <!-- 
+        attribute :属性
+
+        HTML预定义属性  type  、 checked
+        HTML自定义属性    test
+
+     -->
+    <input type="checkbox" checked="checked" test="test" />
+  </body>
+  <script>
+    debugger
+    let testNode = document.querySelector('input[type=checkbox]');
+    console.log(testNode);
+  </script>
+</html>
