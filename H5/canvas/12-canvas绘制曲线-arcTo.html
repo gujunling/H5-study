@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-H5-canvas绘制曲线-arcTo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+      }
+
+      .wrap > .test {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 00;
+        margin: auto;
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+
+        ctx.save();
+        // 关于样式的，写在beginPath上面，save下面
+        ctx.fillStyle = "pink";
+
+        ctx.beginPath();
+        // 关于路径的，写在beginPath下面，restore上面
+        ctx.moveTo(150,150)
+        ctx.arcTo(200, 50, 300,300,50);
+        // ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+        /*
+        arcTo(x1, y1, x2, y2, radius)
+            是 Canvas 2D API 根据控制点和半径绘制圆弧路径，使用当前的描点(前一个moveTo或lineTo等函数的止点)。
+                根据当前描点与给定的控制点1连接的直线，和控制点1与控制点2连接的直线，作为使用指定半径的圆的切线，画出两条切线之间的弧线路径。
+                根据给定的控制点和半径画一段圆弧,radius 为半径长度
+                肯定会从(x1 y1)  但不一定经过(x2 y2);(x2 y2)只是控制一个方向
+
+              参考文档：https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/arcTo
+        */ 
+      }
+    };
+  </script>
+</html>

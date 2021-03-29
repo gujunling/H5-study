@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-H5-自定义属性</title>
+  </head>
+  <body>
+    <div id="test" data-sweetheart-test="test"></div>
+  </body>
+  <script>
+    // dataset  相当于自定义属性的property（限制条件：必须要以data-开头，并且使用驼峰命名）
+    let testNode = document.querySelector("#test");
+    // 需要注意的是驼峰命名，即dataset.后的属性名为（省略dataset-。然后将属性名中其他使用-连接的属性名后面的首字母大写，即data-sweetheart-test，使用dataset来取值的话使用dataset.sweetheartTest）
+    testNode.dataset.sweetheartTest = "qwert";
+    console.log(testNode.dataset.sweetheartTest);
+  </script>
+</html>

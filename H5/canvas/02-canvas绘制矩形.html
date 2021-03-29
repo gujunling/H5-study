@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-H5-canvas绘制矩形</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+      }
+
+      .wrap > .test {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 00;
+        margin: auto;
+        background: gray;
+      }
+      /* canvas画布的默认背景色默认继承上级元素的背景色 */
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      //  拿到画布
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+        // 偏移量不能加单位
+        // 填充的矩形
+        ctx.fillRect(20, 20, 100, 100);
+        /*
+        带边框的矩形
+       (边框实际上大小为2px，因为虽然是1px的边框，但是是上下均为0.5px，而css中会对小数向上进位取整，所以虽然是上下均为0.5px，实际渲染的最后是上下均为1px，
+        即，如果偏移量为100,100，实际上边框为99.5-100.5，css对小数向上进位取整以后为99-101，若想实现边框为1px，则可以设置偏移量为100.5,100.5)
+        */
+        ctx.strokeRect(120, 120, 100, 100);
+        //在画布上画一个与背景颜色完全相同的矩形，实际上我们肉眼是看不出来的，但可以叠加到画的其他的矩形上
+        ctx.clearRect(220, 220, 50, 50);
+      }
+    };
+  </script>
+</html>

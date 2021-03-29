@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-H5-canvas绘制矩形-修改样式</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+      }
+
+      .wrap > .test {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 00;
+        margin: auto;
+        background: gray;
+      }
+      /* canvas画布的默认背景色默认继承上级元素的背景色 */
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    // canvas是同步思维，和浏览器本身的渲染机制不同
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      console.log(canvas);
+      //  拿到画布
+      console.log(canvas.getContext);
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+
+        //设置样式和颜色,必须在画矩形之前进行设置，若在画矩形之后设置，则不会生效
+        // 通过canvas画的矩形或者其他图形，css和js是无法修改其样式的，只能通过canvas定义的API才能修改
+        ctx.fillStyle = "blue";
+        ctx.strokeStyle = "pink";
+        ctx.lineWidth = 30;
+        ctx.lineJoin = "round";
+        // 此时的lineWidth也是上下均分的，若ctx.lineWidth = 10;，则上面5px，下面5px
+
+        // 偏移量不能加单位
+        // 填充的矩形
+        ctx.fillRect(0, 0, 100, 100);
+        /*
+        带边框的矩形
+       (边框实际上大小为2px，因为虽然是1px的边框，但是是上下均为0.5px，而css中会对小数向上进位取整，所以虽然是上下均为0.5px，实际渲染的最后是上下均为1px，
+        即，如果偏移量为100,100，实际上边框为99.5-100.5，css对小数向上进位取整以后为99-101，若想实现边框为1px，则可以设置偏移量为100.5,100.5)
+        */
+        ctx.strokeRect(100, 100, 100, 100);
+      }
+    };
+  </script>
+</html>

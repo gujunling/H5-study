@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-H5-canvas绘制路径-绘制矩形</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+      }
+
+      .wrap > .test {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 00;
+        margin: auto;
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+        ctx.fillStyle = "pink";
+        ctx.rect(50, 50, 100, 100);
+        // 单纯通过rect设置值并不会绘制矩形，需要在下面设置通过什么形式绘制，例如画线或者填充
+        ctx.fill();
+      }
+    };
+  </script>
+</html>

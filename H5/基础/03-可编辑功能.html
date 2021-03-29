@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-H5-可编辑功能</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .test {
+        width: 200px;
+        height: 200px;
+        border: 1px solid;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 注意，此时的contenteditable="true"必须这样写，才表示当前元素可编辑，其他属性值则都会使此属性失效 -->
+    <div class="test" contenteditable="true">
+      大街上发空间不挂科加首付客家话
+    </div>
+  </body>
+</html>

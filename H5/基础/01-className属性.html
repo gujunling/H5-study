@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-H5-className属性</title>
+  </head>
+  <body>
+    <div id="test" class="haha haha1 haha2 haha3"></div>
+  </body>
+  <script>
+    // classList相当于class属性的property（className，只是className不容易操作）
+    let testNode = document.querySelector("#test");
+    // 添加一个class属性值
+    testNode.classList.add("haha4");
+
+    // 移除一个class属性值
+    testNode.classList.remove("haha");
+
+    // 如果 visible 类值已存在，则移除它，否则添加它
+    testNode.classList.toggle("haha4");
+    testNode.classList.toggle("haha4444");
+
+    console.log(testNode.classList);
+  </script>
+</html>

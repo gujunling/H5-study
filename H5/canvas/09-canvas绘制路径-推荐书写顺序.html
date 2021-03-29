@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-H5-canvas绘制路径-推荐书写顺序</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+      }
+
+      .wrap > .test {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 00;
+        margin: auto;
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      /*
+      1.路径容器
+            每次调用路径API时，都会向路径容器中添加路径
+            调用beginPath(),会清空整个路径容器
+      2.样式容器
+            每次调用样式API时，都会向样式容器中添加样式
+            调用save()时，将样式容器中的状态压入样式栈
+            调用restore()时，将样式容器中的栈顶样式状态弹出样式栈，进入到样式容器中，覆盖样式容器中的样式，并进行显示
+      3.样式栈
+            调用save()时，将样式容器中的状态压入样式栈
+            调用restore()时，将样式容器中的栈顶样式状态弹出样式栈，进入到样式容器中，覆盖样式容器中的样式，并进行显示
+      */
+
+      let canvas = document.querySelector(".wrap > .test");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+
+        ctx.save();
+        // 关于样式的，写在beginPath上面，save下面
+        ctx.fillStyle = "pink";
+
+        ctx.beginPath();
+        // 关于路径的，写在beginPath下面，restore上面
+        ctx.fillRect(50, 50, 100, 100);
+
+        ctx.restore();
+
+        //  一个save()后面对应一个restore()，即save()和restore()成对出现，这样一个进栈，一个出栈，样式不会受到其他的影响
+      }
+    };
+  </script>
+</html>

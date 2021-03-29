@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-H5-canvas绘制路径-save&&restore</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+      }
+
+      .wrap > .test {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 00;
+        margin: auto;
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+
+        ctx.save();
+        // 关于样式的，写在beginPath上面，save下面
+        ctx.fillStyle = "pink";
+        ctx.save();
+        ctx.fillStyle = "blue";
+        ctx.save();
+        ctx.fillStyle = "red";
+        ctx.save();
+        ctx.beginPath();
+        // 关于路径的，写在beginPath下面，restore上面
+        ctx.restore();
+        ctx.restore();
+        ctx.restore();
+        ctx.fillRect(50, 50, 100, 100);
+
+        /*
+        save() 是 Canvas 2D API 通过将当前状态放入栈中，保存 canvas 全部状态的方法
+        restore() 是 Canvas 2D API 通过在绘图状态栈中弹出顶端的状态，将 canvas 恢复到最近的保存状态的方法。
+                  如果没有保存状态，此方法不做任何改变。
+        */
+      }
+    };
+  </script>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-H5-canvas绘制路径</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+      }
+
+      .wrap > .test {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 00;
+        margin: auto;
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+
+        ctx.strokeStyle = "pink";
+        ctx.lineWidth = 3;
+        // 抬起画笔
+        ctx.moveTo(100, 100);
+        // 用画笔在画布上画点
+        ctx.lineTo(100, 200);
+        ctx.lineTo(200, 200);
+        // 将画笔重新设置到第一次上设置的点
+        // ctx.lineTo(50, 50);
+
+        // 闭合路径，和将画笔设置为起始点作用一样，都是为了闭合路径，形成封闭区域
+        ctx.closePath();
+        // 画线
+        ctx.stroke();
+        ctx.fill();
+      }
+    };
+  </script>
+</html>
