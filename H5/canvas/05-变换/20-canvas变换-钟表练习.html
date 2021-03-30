@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-H5-canvas变换-钟表</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+      }
+
+      .wrap > .test {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 00;
+        margin: auto;
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+        setInterval(() => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          move();
+        }, 1000);
+        move();
+        function move() {
+          ctx.save();
+          ctx.strokeStyle = "green";
+          ctx.lineWidth = 8;
+          ctx.lineCap = "round";
+          // 设置画笔原点为画布的中心点
+          ctx.translate(150, 150);
+          // 将坐标轴旋转90度，使X轴为水平方向，Y轴为垂直方向
+          ctx.rotate((-90 * Math.PI) / 180);
+          ctx.beginPath();
+
+          // 画外层空心圆盘
+          ctx.save();
+          ctx.lineWidth = 14;
+          ctx.strokeStyle = "green";
+          ctx.beginPath();
+          ctx.arc(0, 0, 140, 0, (360 * Math.PI) / 180);
+          ctx.stroke();
+          ctx.restore();
+
+          // 时针刻度
+          ctx.save();
+          for (let i = 0; i < 12; i++) {
+            ctx.rotate((30 * Math.PI) / 180);
+            // canvas 的旋转是叠加的，所以在每一次执行for循环的时候这个旋转的角度是会叠加的，所以现在12个时针刻度已经全部画出来了
+            ctx.beginPath();
+            ctx.moveTo(100, 0);
+            ctx.lineTo(120, 0);
+            ctx.stroke();
+          }
+          ctx.restore();
+
+          // 分针刻度
+          ctx.save();
+          ctx.lineWidth = 4;
+          for (let i = 0; i < 60; i++) {
+            // 当i为5的倍数时，分针刻度旋转到时针刻度，所以只要在i不是5的倍数的时候，才画分针的刻度，
+            // 同时应该先判断这个i是不是5的倍数，（0 % 5 = 0），所以应该先判断在旋转，不然画的第一个线不对，会先旋转再画线，导致画线会偏差6度，
+            // 如果需要先旋转再画线的话，判断条件应该改为 (（i+1）% 5 !== 0) 或者说for循环从 1 开始到 <= 60  (let i = 1; i <= 60; i++)
+            if (i % 5 != 0) {
+              ctx.beginPath();
+              ctx.moveTo(117, 0);
+              ctx.lineTo(120, 0);
+              ctx.stroke();
+            }
+            ctx.rotate((6 * Math.PI) / 180);
+            // canvas 的旋转是叠加的，所以在每一次执行for循环的时候这个旋转的角度是会叠加的，所以现在60个分针刻度已经全部画出来了
+          }
+          ctx.restore();
+
+          // 时分秒针、表座
+          let date = new Date();
+          let second = date.getSeconds();
+          let minute = date.getMinutes() + second / 60;
+          let hour = date.getHours() + minute / 60;
+          hour = hour > 12 ? hour - 12 : hour;
+
+          // 时针
+          ctx.save();
+          ctx.lineWidth = 14;
+          ctx.rotate((hour * 30 * Math.PI) / 180);
+          ctx.beginPath();
+          ctx.moveTo(-20, 0);
+          ctx.lineTo(80, 0);
+          ctx.stroke();
+          ctx.restore();
+
+          // 分针
+          ctx.save();
+          ctx.lineWidth = 10;
+          ctx.strokeStyle = "blue";
+          ctx.rotate((minute * 6 * Math.PI) / 180);
+          ctx.beginPath();
+          ctx.moveTo(-28, 0);
+          ctx.lineTo(112, 0);
+          ctx.stroke();
+          ctx.restore();
+
+          // 秒针
+          ctx.save();
+          ctx.strokeStyle = "#D40000";
+          ctx.fillStyle = "#D40000";
+          ctx.lineWidth = 6;
+          ctx.rotate((second * 6 * Math.PI) / 180);
+          ctx.beginPath();
+          ctx.moveTo(-30, 0);
+          ctx.lineTo(83, 0);
+          ctx.stroke();
+
+          // 表座
+          ctx.beginPath();
+          ctx.arc(0, 0, 10, 0, (360 * Math.PI) / 180);
+          ctx.fill();
+
+          // 秒针空心圆头
+          ctx.beginPath();
+          ctx.arc(96, 0, 10, 0, (360 * Math.PI) / 180);
+          ctx.stroke();
+
+          ctx.restore();
+          ctx.restore();
+        }
+      }
+    };
+  </script>
+</html>

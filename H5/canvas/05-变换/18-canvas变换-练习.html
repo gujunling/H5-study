@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-H5-canvas变换-练习</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+      }
+
+      .wrap > .test {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 00;
+        margin: auto;
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let flag = 0;
+      let scale = 0;
+      let scaleFlag = 0;
+      let canvas = document.querySelector(".wrap > .test");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+
+        ctx.save();
+        // 关于样式的，写在beginPath上面，save下面
+        ctx.fillStyle = "pink";
+        ctx.save();
+        ctx.translate(150, 150);
+        ctx.beginPath();
+        ctx.fillRect(-50, -50, 100, 100);
+        ctx.restore();
+        setInterval(() => {
+          flag++;
+          // 清除画布
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          ctx.save();
+          ctx.translate(150, 150);
+          ctx.rotate((flag * Math.PI) / 180);
+          if (scale === 100) {
+            scaleFlag = -1;
+          } else if (scale === 0) {
+            scaleFlag = 1;
+          }
+          scale += scaleFlag;
+          ctx.scale(scale / 50, scale / 50);
+          ctx.beginPath();
+          ctx.fillRect(-50, -50, 100, 100);
+          ctx.restore();
+        }, 1000 / 60);
+        ctx.restore();
+      }
+    };
+  </script>
+</html>

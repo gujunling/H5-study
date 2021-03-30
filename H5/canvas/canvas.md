@@ -1,5 +1,21 @@
 ## canvas
 
+- canvas 图像的渲染有别于 HTML 图像的渲染
+
+  canvas 的渲染极快，不会出现代码覆盖后延迟渲染的问题.写 canvas 代码时要有同步思维。
+
+* 在绘制图形之前需要先判断画笔是否存在，并注意 save()和 restore()方法的使用。
+
+* canvas 画布默认高度为 300 \* 150
+
+  定义高宽一定要使用 HTML 的 attribute 的形式来定义，通过 css 的形式定义会缩放画布内的图像。
+
+* 绘制矩形的问题
+
+  边框宽度问题：边框宽度是在偏移量上下分别渲染一半，可能会出现小数边框，出现小数边框时会向上取整，为了避免出现这种问题，可以设置偏移量为带小数的值。
+
+  canvas 的 API 只支持一种图像的直接渲染。即矩形。
+
 ## canvas 基本用法
 
 ### 1.什么是 canvas(画布)
@@ -232,7 +248,13 @@ arc(x, y, radius, startAngle, endAngle, anticlockwise)
 arcTo(x1, y1, x2, y2, radius)
  是 Canvas 2D API 根据控制点和半径绘制圆弧路径，使用当前的描点(前一个moveTo或lineTo等函数的止点)。根据当前描点与给定的控制点1连接的直线，和控制点1与控制点2连接的直线，作为使用指定半径的圆的切线，画出两条切线之间的弧线路径。
     根据给定的控制点和半径画一段圆弧,radius 为半径长度
-    肯定会从(x1 y1)  但不一定经过(x2 y2);(x2 y2)只是控制一个方向
+
+	一般要结合moveTo(x,y)来使用
+	  x,y :起始点
+	  x1,y1:控制点
+      x2,y2:结束点
+
+	不一定会经过起始点和结束点，只是画一段圆弧，然后慢慢靠到起始点、控制点、结束点三个点组成的角上。
 
 	参考文档：https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/arcTo
 ```
@@ -260,4 +282,37 @@ bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
 	起始点为moveto时指定的点
 
 	参考链接：https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/bezierCurveTo
+```
+
+## canvas 中的变换
+
+### translate 平移变换
+
+```
+translate(x, y)
+	我们先介绍 translate 方法，它用来移动 canvas的原点到一个不同的位置。
+	translate 方法接受两个参数。x 是左右偏移量，y 是上下偏移量，
+	    在canvas中translate是累加的
+```
+
+### rotate(angle)旋转
+
+```
+这个方法只接受一个参数：旋转的角度(angle)，它是顺时针方向的，以弧度为单位的值。
+旋转的中心点始终是 canvas 的原点，如果要改变它，我们需要用到 translate 方法
+在canvas中rotate是累加的
+
+需要注意的是：canvas中的同步思维，先平移再旋转和先旋转再平移效果是不一样的
+
+```
+
+### scale(x, y)缩放
+
+```
+scale(x, y)
+scale 方法接受两个参数。x,y 分别是横轴和纵轴的缩放因子，它们都必须是正值。
+值比 1.0 小表示缩小，比 1.0 大则表示放大，值为 1.0 时什么效果都没有。
+缩放一般我们用它来增减图形在 canvas 中的像素数目，对形状，位图进行缩小或者放大。
+
+在canvas中scale是累乘的
 ```
