@@ -55,7 +55,9 @@
         ctx.restore();
         ctx.restore();
         ctx.restore();
+        // 此时如果需要多次使用save()和restore()方法时，需要注意路径的需要在多次的restore后面设置，如果在前面设置的话不会生效
         ctx.fillRect(50, 50, 100, 100);
+        ctx.restore();
 
         /*
         save() 是 Canvas 2D API 通过将当前状态放入栈中，保存 canvas 全部状态的方法

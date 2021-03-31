@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-canvas像素操作-单像素操作</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .wrap > .test {
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+        ctx.save();
+        ctx.fillStyle = "#bfa";
+        ctx.beginPath();
+        ctx.fillRect(50, 50, 100, 100);
+        ctx.restore();
+        let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        // let color = getPxInfo(imgData, 50, 50);
+        // console.log(color);
+        // 改变第59行整体的颜色
+        for (let i = 0; i < imgData.width; i++) {
+          setPxInfo(imgData, i, 59, [255, 255, 255, 255]);
+        }
+        ctx.putImageData(imgData, 0, 0);
+      }
+      // 获取单个像素位置上的颜色
+      function getPxInfo(imgData, x, y) {
+        // x 代表设置的第多少列
+        // y代表设置的第多少行
+        let color = [];
+        let data = imgData.data;
+        let w = imgData.width;
+        let h = imgData.height;
+        // r
+        color[0] = data[(y * w + x) * 4];
+        // g
+        color[1] = data[(y * w + x) * 4 + 1];
+        // b
+        color[2] = data[(y * w + x) * 4 + 2];
+        // a
+        color[3] = data[(y * w + x) * 4 + 3];
+        return color;
+      }
+      // 设置单个像素上的颜色，注意，color需要是一个rgba值的数组
+      function setPxInfo(imgData, x, y, color) {
+        let data = imgData.data;
+        let w = imgData.width;
+        let h = imgData.height;
+        // r
+        data[(y * w + x) * 4] = color[0];
+        // g
+        data[(y * w + x) * 4 + 1] = color[1];
+        // b
+        data[(y * w + x) * 4 + 2] = color[2];
+        // a
+        data[(y * w + x) * 4 + 3] = color[3];
+      }
+    };
+  </script>
+</html>

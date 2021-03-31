@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-canvas像素操作-马赛克实例</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .wrap > .test {
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+        let img = new Image();
+        img.src = "./1111.png";
+        img.onload = function () {
+          canvas.width = img.width * 2;
+          canvas.height = img.height;
+          draw();
+        };
+        function draw() {
+          ctx.drawImage(img, 0, 0);
+          let oldImgData = ctx.getImageData(0, 0, img.width, img.height);
+          let newImgData = ctx.createImageData(img.width, img.height);
+
+          // 加上马赛克的操作
+
+          // 测试偏移量是否正确
+          // for (let i = 0; i < newImgData.data.length; i++) {
+          //   newImgData.data[4 * i + 3] = 255;
+          // }
+
+          // 1.选取一个马赛克矩形
+          // 2.从马赛克矩形中随机抽取出一个像素点的信息（rgba）
+          // 3.将整个马赛克矩形中的像素点信息统一调成随机抽取出来的那个
+
+          // 1.选取一个马赛克矩形
+          let size = 10;
+          for (let i = 0; i < oldImgData.width / size; i++) {
+            for (let j = 0; j < oldImgData.height / size; j++) {
+              // (i,j) 表示每一个马赛克矩形的坐标，这个矩形是5x5个由 一个像素 * 一个像素 的小矩形组成的
+              // (0,0) :表示画布上从（0,0）像素点到(4,4)这 25 个像素点组成的第一个马赛克矩形
+              // (0,0): (0,0) => (4,4)    (1,0): (5,0) => (9,4)
+              // (1,0): (0,5) => (4,9)    (1,1): (5,5) => (9,9)
+
+              // Math.random()   [0,1)之间的随机数，前闭后开
+              // Math.random()* size   [0,5)之间的随机数，前闭后开
+              //  Math.floor(Math.random() * size)  向下取整，即[0,4]
+
+              // 2.从马赛克矩形中随机抽取出一个像素点的信息（rgba）
+              let color = getPxInfo(
+                oldImgData,
+                i * size + Math.floor(Math.random() * size),
+                j * size + Math.floor(Math.random() * size)
+              );
+              // 3.将整个马赛克矩形中的像素点信息统一调成随机抽取出来的那个
+
+              for (let a = 0; a < size; a++) {
+                for (let b = 0; b < size; b++) {
+                  setPxInfo(newImgData, i * size + a, j * size + b, color);
+                }
+              }
+            }
+          }
+          ctx.clearRect(img.width, img.height, canvas.width, canvas.height);
+
+          ctx.putImageData(newImgData, img.width, 0);
+        }
+      }
+      // 获取单个像素位置上的颜色
+      function getPxInfo(imgData, x, y) {
+        // x 代表设置的第多少列
+        // y代表设置的第多少行
+        let color = [];
+        let data = imgData.data;
+        let w = imgData.width;
+        let h = imgData.height;
+        // r
+        color[0] = data[(y * w + x) * 4];
+        // g
+        color[1] = data[(y * w + x) * 4 + 1];
+        // b
+        color[2] = data[(y * w + x) * 4 + 2];
+        // a
+        color[3] = data[(y * w + x) * 4 + 3];
+        return color;
+      }
+      // 设置单个像素上的颜色，注意，color需要是一个rgba值的数组
+      function setPxInfo(imgData, x, y, color) {
+        let data = imgData.data;
+        let w = imgData.width;
+        let h = imgData.height;
+        // r
+        data[(y * w + x) * 4] = color[0];
+        // g
+        data[(y * w + x) * 4 + 1] = color[1];
+        // b
+        data[(y * w + x) * 4 + 2] = color[2];
+        // a
+        data[(y * w + x) * 4 + 3] = color[3];
+      }
+    };
+  </script>
+</html>

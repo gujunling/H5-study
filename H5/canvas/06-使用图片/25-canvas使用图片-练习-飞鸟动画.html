@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-canvas使用图片-练习-飞鸟动画</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .wrap > .test {
+        background: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      canvas.width = document.documentElement.clientWidth;
+      canvas.height = document.documentElement.clientHeight;
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+        let flag = 0;
+        let value = 0;
+        setInterval(() => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          value += 10;
+          flag++;
+          if (flag === 9) {
+            flag = 1;
+          }
+          let img = new Image();
+          img.src = "./img/q_r" + flag + ".jpg";
+          img.onload = function () {
+            draw(this);
+          };
+        }, 100);
+        function draw(image) {
+          ctx.save();
+          ctx.drawImage(image, value, 0);
+          ctx.beginPath();
+          ctx.restore();
+        }
+      }
+    };
+  </script>
+</html>

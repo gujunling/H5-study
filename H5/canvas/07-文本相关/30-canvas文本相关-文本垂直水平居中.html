@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-canvas文本相关-文本的垂直水平居中</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .wrap > .test {
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+        ctx.save();
+        ctx.fillStyle = "yellow";
+        ctx.font = "60px sans-serif";
+        ctx.textBaseline = "middle";
+        let w = ctx.measureText("一二三四五六").width;
+        ctx.beginPath();
+        ctx.fillText(
+          "一二三四五六",
+          (canvas.width - w) / 2,
+          (canvas.height - 60) / 2
+        );
+        ctx.restore();
+        // 此时的垂直水平居中在我看来并不是垂直水平居中
+      }
+    };
+  </script>
+</html>

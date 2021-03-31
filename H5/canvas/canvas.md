@@ -4,17 +4,19 @@
 
   canvas 的渲染极快，不会出现代码覆盖后延迟渲染的问题.写 canvas 代码时要有同步思维。
 
-* 在绘制图形之前需要先判断画笔是否存在，并注意 save()和 restore()方法的使用。
+- 在绘制图形之前需要先判断画笔是否存在，并注意 save()和 restore()方法的使用。
 
-* canvas 画布默认高度为 300 \* 150
+- canvas 画布默认高度为 300 \* 150
 
   定义高宽一定要使用 HTML 的 attribute 的形式来定义，通过 css 的形式定义会缩放画布内的图像。
 
-* 绘制矩形的问题
+- 绘制矩形的问题
 
   边框宽度问题：边框宽度是在偏移量上下分别渲染一半，可能会出现小数边框，出现小数边框时会向上取整，为了避免出现这种问题，可以设置偏移量为带小数的值。
 
   canvas 的 API 只支持一种图像的直接渲染。即矩形。
+
+- canvas 中的元素没法通过 css 和 JS 来控制，只能使用 canvas 的 API 来控制
 
 ## canvas 基本用法
 
@@ -315,4 +317,199 @@ scale 方法接受两个参数。x,y 分别是横轴和纵轴的缩放因子，�
 缩放一般我们用它来增减图形在 canvas 中的像素数目，对形状，位图进行缩小或者放大。
 
 在canvas中scale是累乘的
+```
+
+## canvas 使用图片
+
+### canvas 中引入图片
+
+```
+(需要image对象或者canvas对象)
+
+1.canvas操作图片时，必须要等图片加载完才能操作
+
+2.drawImage(image, x, y, width, height)
+	image
+        绘制到上下文的元素。允许任何的 canvas 图像源,是 image 或者 canvas 对象
+	x
+	  image的左上角在目标canvas上 X 轴坐标，起始X轴坐标。
+	y
+	  image的左上角在目标canvas上 Y 轴坐标，起始y轴坐标。
+
+	width（可选）
+             image在目标canvas上绘制的宽度。 允许对绘制的image进行缩放。 如果不说明， 在绘制时image宽度不会缩放。
+	height（可选）
+	        image在目标canvas上绘制的高度。 允许对绘制的image进行缩放。 如果不说明， 在绘制时image高度不会缩放。
+```
+
+### canvas 设置背景
+
+```
+(需要image对象或者canvas对象)
+1.createPattern(image, repetition)
+		  image:图像源
+		epetition:
+			"repeat"
+			"repeat-x"
+			"repeat-y"
+			"no-repeat"
+
+一般情况下，我们都会将createPattern返回的对象作为fillstyle的值
+```
+
+## 渐变
+
+### 线性渐变
+
+```
+createLinearGradient(x1, y1, x2, y2)
+				表示渐变的起点 (x1,y1) 与终点 (x2,y2)
+
+//渐变需要设置渐变的颜色，渐变的颜色由下方的API进行设置,一般需要多次设置渐变颜色，每次设置的颜色指标是当前位置的,调用两次这个API相当于是一次渐变，调用三次这个API相当于两次渐变，以此类推
+
+gradient.addColorStop(position, color)
+		gradient :createLinearGradient的返回值
+		addColorStop 方法接受 2 个参数，
+			position 参数必须是一个 0.0 与 1.0 之间的数值，表示渐变中颜色所在的相对位置。
+							例如，0.5 表示颜色会出现在正中间。
+			color 参数必须是一个有效的 CSS 颜色值（如 #FFF， rgba(0,0,0,1)，等等）
+```
+
+### 径向渐变
+
+```
+createRadialGradient(x1, y1, r1, x2, y2, r2)
+		前三个参数则定义另一个以(x1,y1) 为原点，半径为 r1 的圆，
+		后三个参数则定义另一个以 (x2,y2) 为原点，半径为 r2 的圆。
+```
+
+## canvas 绘制文本
+
+### 绘制文本的两种方式
+
+```
+canvas 提供了两种方法来渲染文本:
+		fillText(text, x, y)
+			在指定的(x,y)位置填充指定的文本
+		strokeText(text, x, y)
+			在指定的(x,y)位置绘制文本边框
+```
+
+### 文本样式
+
+- 字体样式
+
+```
+font = value
+	当前我们用来绘制文本的样式. 这个字符串使用和 CSS font 属性相同的语法.
+	默认的字体是 10px sans-serif。
+	font属性在指定时，必须要有大小和字体 缺一不可,虽然字体类型只有一种，书写什么值均会渲染成该字体，但建议直接书写正确的值(sans-serif)
+```
+
+- 水平对齐方式
+
+```
+textAlign = value
+	文本对齐选项. 可选的值包括： left, right  center.
+	left
+		文本左对齐。
+	right
+		文本右对齐。
+	center
+		文本居中对齐。
+		这里的textAlign="center"比较特殊。textAlign的值为center时候
+		文本的居中是基于你在fillText的时候所给的x坐标轴的值，
+		也就是说文本一半在x坐标轴的左边，一半在x坐标轴的右边，
+		可以理解为计算x的位置时从默认文字的左端，改为文字的中心，因此你只需要考虑x的位置即可）。
+		所以，如果你想让文本在整个canvas居中，就需要将fillText的x值设置成canvas的宽度的一半。
+
+ 参考链接：https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/textAlign
+```
+
+- 垂直对齐方式
+
+```
+textBaseline = value
+	描述绘制文本时，当前文本基线的属性。
+	top
+		文本基线在文本块的顶部。
+	middle
+		文本基线在文本块的中间。
+	bottom
+		文本基线在文本块的底部。
+```
+
+### measureText
+
+```
+measureText() 方法返回一个 TextMetrics 对象，包含关于文本尺寸的信息（例如文本的宽度）
+
+必须要传的一个参数text(需要测量的String )。
+
+```
+
+### 阴影(文本阴影&盒模型阴影)
+
+```
+shadowOffsetX = float
+	shadowOffsetX 和 shadowOffsetY 用来设定阴影在 X 和 Y 轴的延伸距离，
+	它们默认都为 0。
+shadowOffsetY = float
+	shadowOffsetX 和 shadowOffsetY 用来设定阴影在 X 和 Y 轴的延伸距离，
+	它们默认都为 0。
+shadowBlur = float
+	shadowBlur 用于设定阴影的模糊程度，其数值并不跟像素数量挂钩，也不受变换矩阵的影响，默认为 0。
+shadowColor = color(必需项)
+	shadowColor 是标准的 CSS 颜色值，用于设定阴影颜色效果，默认是全透明的黑色。
+```
+
+## canvas 像素操作
+
+到目前为止，我们尚未深入了解 Canvas 画布真实像素的原理，事实上，我们可以直接通过 ImageData 对象操纵像素数据，直接读取或将数据数组写入该对象中。
+
+### 得到场景像素数据
+
+```
+getImageData():获得一个包含画布场景像素数据的ImageData对像,它代表了画布区域的对象数据
+
+      ctx.getImageData(sx, sy, sw, sh)
+				sx:将要被提取的图像数据矩形区域的左上角 x 坐标。
+				sy:将要被提取的图像数据矩形区域的左上角 y 坐标。
+				sw:将要被提取的图像数据矩形区域的宽度。
+				sh:将要被提取的图像数据矩形区域的高度。
+```
+
+### ImageData 对象
+
+```
+ImageData对象中存储着canvas对象真实的像素数据，它包含以下几个只读属性：
+	width:图片宽度，单位是像素
+	height:图片高度，单位是像素
+	data:Uint8ClampedArray类型的一维数组，
+		包含着RGBA格式的整型数据，范围在0至255之间（包括255）
+		R:0 --> 255(黑色到白色)
+		G:0 --> 255(黑色到白色)
+		B:0 --> 255(黑色到白色)
+		A:0 --> 255(透明到不透明)
+```
+
+### 在场景中写入像素数据
+
+```
+putImageData()方法去对场景进行像素数据的写入。
+putImageData(myImageData, dx, dy)
+     ImageData :包含像素值的数组对象。
+		dx:源图像数据在目标画布中的位置偏移量（x 轴方向的偏移量）。
+		dy:源图像数据在目标画布中的位置偏移量（y 轴方向的偏移量）。
+
+```
+
+### 创建一个 ImageData 对象
+
+```
+ctx.createImageData(width, height);
+	width : ImageData 新对象的宽度。
+	height: ImageData 新对象的高度。
+
+	默认创建出来的是透明的
 ```
