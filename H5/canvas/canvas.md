@@ -113,6 +113,11 @@ canvas在渲染矩形边框时，边框宽度是平均分在偏移位置的两�
 ```
         设置画布的样式和颜色必须在画矩形之前进行设置，若在画矩形之后设置，则不会生效
 fillStyle   :设置图形的填充颜色。填充时才生效，画的边框矩形是不会生效的
+            背景的 fillStyle的值可以是createPattern(image, repetition)返回的对象
+			线性渐变fillStyle的值可以是createLinearGradient(x1, y1, x2, y2))返回的对象
+										addColorStop(position, color)
+			径向渐变fillStyle的值可以是createRadialGradient(x1, y1, r1, x2, y2, r2)返回的对象
+										addColorStop(position, color)
 strokeStyle :设置图形轮廓的颜色。
     默认情况下，线条和填充颜色都是黑色（CSS 颜色值 #000000）
 lineWidth : 这个属性设置当前绘线的粗细。属性值必须为正数。
@@ -512,4 +517,72 @@ ctx.createImageData(width, height);
 	height: ImageData 新对象的高度。
 
 	默认创建出来的是透明的
+```
+
+## canvas 合成
+
+### 全局透明度的设置
+
+```
+globalAlpha = value
+
+globalAlpha 是 Canvas 2D API 用来描述在canvas上绘图之前，设置图形和图片透明度的属性。
+	这个属性影响到 canvas 里所有图形的透明度，
+    数值的范围从 0.0 （完全透明）到1.0 （完全不透明）。
+	默认值是 1.0。
+	如果数值不在范围内，包括Infinity 和NaN ，无法赋值，并且 globalAlpha 会保持原有的数值。
+
+参考链接：https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/globalAlpha
+```
+
+### 覆盖合成
+
+```
+source:新的图像(源)
+
+destination:已经绘制过的图形(目标)
+
+	globalCompositeOperation 属性设置要在绘制新形状时应用的合成操作的类型，其中type是用于标识要使用的合成或混合模式操作的字符串。
+
+    type可取值：
+		source-over(默认值):源在上面,新的图像层级比较高
+		source-in  :只留下源与目标的重叠部分(源的那一部分)，新图形只在新图形和目标画布重叠的地方绘制。其他的都是透明的。
+		source-out :只留下源超过目标的部分，在不与现有画布内容重叠的地方绘制新图形。
+		source-atop:砍掉源溢出的部分，新图形只在与现有画布内容重叠的地方绘制。
+
+		destination-over:目标在上面,旧的图像层级比较高，在现有的画布内容后面绘制新的图形。
+		destination-in:只留下源与目标的重叠部分(目标的那一部分)，现有的画布内容保持在新图形和现有画布内容重叠的位置。其他的都是透明的。
+		destination-out:只留下目标超过源的部分，现有内容保持在新图形不重叠的地方。
+		destination-atop:砍掉目标溢出的部分，现有的画布只保留与新图形重叠的部分，新的图形是在画布内容后面绘制的。
+
+    参考链接：https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
+```
+
+## 将画布导出为图像
+
+```
+toDataURL(注意是canvas元素接口上的方法)
+toDataURL() 方法返回一个包含图片展示的 data URI 。可以使用 type 参数其类型，默认为 PNG 格式。图片的分辨率为96dpi。
+
+如果画布的高度或宽度是0，那么会返回字符串“data:,”。
+如果传入的类型非“image/png”，但是返回的值以“data:image/png”开头，那么该传入的类型是不支持的。
+Chrome支持“image/webp”类型。
+
+参数：
+    type 可选
+         图片格式，默认为 image/png
+    encoderOptions 可选
+         在指定图片格式为 image/jpeg 或 image/webp的情况下，可以从 0 到 1 的区间内选择图片的质量。如果超出取值范围，将会使用默认值 0.92。其他参数会被忽略。
+
+参考链接：https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLCanvasElement/toDataURL
+```
+
+## 事件操作
+
+```
+ctx.isPointInPath(x, y)
+	判断在当前路径中是否包含检测点
+		x:检测点的X坐标
+		y:检测点的Y坐标
+注意，此方法只作用于最新画出的canvas图像
 ```

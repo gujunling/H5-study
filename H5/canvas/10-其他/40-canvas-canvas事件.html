@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-canvas-事件</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .wrap > .test {
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+        ctx.save();
+        ctx.fillStyle = "green";
+        ctx.beginPath();
+        ctx.rect(100, 100, 100, 100);
+        ctx.fill();
+        ctx.restore();
+        canvas.onclick = function (ev) {
+          ev = ev || event;
+          var x = ev.clientX - canvas.offsetLeft;
+          var y = ev.clientY - canvas.offsetTop;
+          /*
+          此时如果直接在画路径的时候进行填充，会导致下面的事件失效，需要在路径画好了以后再填充，
+           且此事件是作用在最新的路径上的，若写了几个路径，则只有最新的路径画出来的图形才会触发该事件
+          例如：
+            ctx.fillRect(100, 100, 100, 100); //这个在调用下面的事件（isPointInPath）的时候会失效，
+
+           ctx.rect(100, 100, 100, 100);
+           ctx.fill();
+          //在画好路径后再填充图形，  此时下面的事件才能正确执行，不会失效，
+          */
+          if (ctx.isPointInPath(x, y)) {
+            alert("黄金道士怪兽计划");
+          }
+        };
+
+        /*
+         */
+      }
+    };
+  </script>
+</html>

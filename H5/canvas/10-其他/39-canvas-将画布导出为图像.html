@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-canvas-将画布导出为图像</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .wrap > .test {
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+        ctx.save();
+        ctx.fillStyle = "green";
+        ctx.beginPath();
+        ctx.fillRect(0, 0, 100, 100);
+        ctx.restore();
+
+        ctx.save();
+        ctx.globalCompositeOperation = "source-in";
+        ctx.fillStyle = "yellow";
+        ctx.beginPath();
+        ctx.arc(150, 150, 140, 0, (360 * Math.PI) / 180);
+        ctx.fill();
+        ctx.restore();
+        let url = canvas.toDataURL();
+        console.log(url);
+
+        let img = new Image();
+        img.src = url;
+        img.onload = function () {
+          draw();
+        };
+        function draw() {
+          ctx.drawImage(img, 150, 150);
+        }
+        /*
+         */
+      }
+    };
+  </script>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width = device-width, initial-scale = 1.0, user-scalable = no "
+    />
+    <title>前端小记-canvas合成-移动端刮刮卡实例</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap,
+      .wrap > ul,
+      .wrap > ul > li {
+        height: 100%;
+      }
+      .wrap > .test {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transition: 1s;
+      }
+      .wrap > ul > li {
+        background: url("./img/background.png");
+        background-size: 100% 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test"></canvas>
+      <ul>
+        <li></li>
+      </ul>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      // 设置canvas的宽度和高度为HTML整体的宽度和高度
+      canvas.width = document.documentElement.clientWidth;
+      canvas.height = document.documentElement.clientHeight;
+      // 判断canvas的上下文即画笔是否存在，
+      if (canvas.getContext) {
+        // 如果canvas的画笔 存在，则设置为2D的
+        let ctx = canvas.getContext("2d");
+        let img = new Image();
+        // 设置图片的地址
+        img.src = "./img/out.png";
+        // 在图片加载完成之后再插入图片并设置手指的触碰、移动、抬起等事件
+        img.onload = function () {
+          draw();
+        };
+        function draw() {
+          let flag = 0;
+          // 在canvas画布中插入图片，从画布的（0,0）点开始，到画布的全部宽度和高度
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          // 移动端手指触碰事件，类似于pc端的onmousedown事件
+          canvas.addEventListener("touchstart", function (ev) {
+            ev = ev || event;
+            let touchC = ev.changedTouches[0];
+            let x = touchC.clientX - canvas.offsetLeft;
+            let y = touchC.clientY - canvas.offsetTop;
+            ctx.save();
+            ctx.lineWidth = 40;
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+            ctx.globalCompositeOperation = "destination-out";
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + 2, y + 2);
+            ctx.stroke();
+            ctx.restore();
+          });
+          // 移动端手指移动事件，类似于移动端的onmousemove事件
+          canvas.addEventListener("touchmove", function (ev) {
+            ev = ev || event;
+            let touchC = ev.changedTouches[0];
+            // 拿到手指滑动时相对于canvas画布的坐标
+            let x = touchC.clientX - canvas.offsetLeft;
+            let y = touchC.clientY - canvas.offsetTop;
+            ctx.save();
+            ctx.lineWidth = 40;
+            // 在手指画线的时候设置线的两头为圆形
+            ctx.lineCap = "round";
+            // 在手指画线的时候设置线条与线条间接合处为圆形
+            ctx.lineJoin = "round";
+            // 设置手指在滑动的时候canvas图片和原来的背景图片只保留原来的背景图片，即设置canvas中画线的部分为透明，让背景图片显示出来
+            ctx.globalCompositeOperation = "destination-out";
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.restore();
+          });
+          // 移动端手指抬起事件
+          canvas.addEventListener("touchend", function (ev) {
+            let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            // 获取所有的像素点
+            let allPX = imgData.width * imgData.height;
+            for (let i = 0; i < allPX; i++) {
+              // 判断所有的像素点中的单个像素点是否为透明的，如果透明，则flag +1
+              if (imgData.data[4 * i + 3] === 0) {
+                flag++;
+              }
+            }
+            // 判断手指滑动的像素是否超过了原来像素的一半，若超过一半了则把canvas的图片设置为透明
+            if (flag >= allPX / 2) {
+              canvas.style.opacity = 0;
+            }
+          });
+
+          //判断过渡是否完成，当过渡事件完成时，将canvas销毁
+          canvas.addEventListener("transitionend", function () {
+            this.remove();
+          });
+        }
+      }
+    };
+  </script>
+</html>

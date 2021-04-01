@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-canvas合成-全局透明度globalAlpha</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .wrap > .test {
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+        ctx.save();
+        ctx.fillStyle = "green";
+        ctx.globalAlpha = 0.2;
+        ctx.beginPath();
+        ctx.fillRect(0, 0, 100, 100);
+        ctx.arc(150, 150, 140, 0, (360 * Math.PI) / 180);
+        ctx.fill();
+        ctx.restore();
+        /*
+        globalAlpha 是 Canvas 2D API 用来描述在canvas上绘图之前，设置图形和图片透明度的属性。
+            这个属性影响到 canvas 里所有图形的透明度，即设置的值会影响画布上所有的图形。
+            数值的范围从 0.0 （完全透明）到1.0 （完全不透明）。
+            默认值是 1.0。
+            如果数值不在范围内，包括Infinity 和NaN ，无法赋值，并且 globalAlpha 会保持原有的数值。
+
+        参考链接：https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/globalAlpha
+        */
+      }
+    };
+  </script>
+</html>

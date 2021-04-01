@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-canvas合成-覆盖合成</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .wrap > .test {
+        background: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas class="test" width="300" height="300"></canvas>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      let canvas = document.querySelector(".wrap > .test");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+        ctx.save();
+        ctx.fillStyle = "green";
+        ctx.beginPath();
+        ctx.fillRect(0, 0, 100, 100);
+        ctx.restore();
+
+        ctx.save();
+        // ctx.globalCompositeOperation = "source-in";
+        // ctx.globalCompositeOperation = "source-out";
+        ctx.globalCompositeOperation = "source-atop";
+        // ctx.globalCompositeOperation = "destination-over";
+        // ctx.globalCompositeOperation = "destination-in";
+        ctx.fillStyle = "yellow";
+        ctx.beginPath();
+        ctx.arc(150, 150, 140, 0, (360 * Math.PI) / 180);
+        ctx.fill();
+        ctx.restore();
+        /*
+        source:新的图像(源)，此时这个source为后面设置的这个黄色的圆吗，永远是两个相比较的图形中前面绘制的那个图形
+
+        destination:已经绘制过的图形(目标)，此时的这个destination为前面设置的那个正方形，永远是两个相比较的图形中后面绘制的图形
+
+          globalCompositeOperation 属性设置要在绘制新形状时应用的合成操作的类型，其中type是用于标识要使用的合成或混合模式操作的字符串。
+
+            type可取值（部分）：
+            source-over(默认值):源在上面,新的图像层级比较高
+            source-in  :只留下源与目标的重叠部分(源的那一部分)，新图形只在新图形和目标画布重叠的地方绘制。其他的都是透明的。
+            source-out :只留下源超过目标的部分，在不与现有画布内容重叠的地方绘制新图形。
+            source-atop:砍掉源溢出的部分，新图形只在与现有画布内容重叠的地方绘制。
+
+            destination-over:目标在上面,旧的图像层级比较高，在现有的画布内容后面绘制新的图形。
+            destination-in:只留下源与目标的重叠部分(目标的那一部分)，现有的画布内容保持在新图形和现有画布内容重叠的位置。其他的都是透明的。
+            destination-out:只留下目标超过源的部分，现有内容保持在新图形不重叠的地方。
+            destination-atop:砍掉目标溢出的部分，现有的画布只保留与新图形重叠的部分，新的图形是在画布内容后面绘制的。
+
+            参考链接：https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
+        
+        */
+      }
+    };
+  </script>
+</html>
