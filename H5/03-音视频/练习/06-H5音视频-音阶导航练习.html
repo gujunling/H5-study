@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-音阶导航练习</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      a {
+        text-decoration: none;
+        color: black;
+        display: block;
+      }
+      .wrap {
+        height: 100%;
+        background: #bfa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .wrap > div > .test {
+        list-style: none;
+        width: 908px;
+        height: 38px;
+        background: green;
+        display: flex;
+        flex-wrap: nowrap;
+        border: 1px solid;
+        overflow: hidden;
+      }
+      .wrap > div > .test > li {
+        width: 100px;
+        height: 38px;
+        text-align: center;
+        line-height: 38px;
+      }
+      .wrap > div > .test > li:not(:last-child) {
+        border-right: 1px solid;
+      }
+      .wrap > div > .test > li > div.haha {
+        width: 100%;
+        height: 100%;
+        background: greenyellow;
+        transition: 1s;
+      }
+      .wrap > div > .test > li:hover div.haha {
+        transform: translateY(-38px);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div>
+        <audio></audio>
+        <ul class="test">
+          <li data-flag="a">
+            <a href="javascript:;">我的主页</a>
+            <div class="haha"></div>
+          </li>
+          <li>
+            <a href="javascript:;">22222</a>
+            <div class="haha"></div>
+          </li>
+          <li data-flag="b">
+            <a href="javascript:;">3333</a>
+            <div class="haha"></div>
+          </li>
+          <li>
+            <a href="javascript:;">4444</a>
+            <div class="haha"></div>
+          </li>
+          <li data-flag="c">
+            <a href="javascript:;">5555</a>
+            <div class="haha"></div>
+          </li>
+          <li>
+            <a href="javascript:;">6666</a>
+            <div class="haha"></div>
+          </li>
+          <li data-flag="d">
+            <a href="javascript:;">7777</a>
+            <div class="haha"></div>
+          </li>
+          <li>
+            <a href="javascript:;">8888</a>
+            <div class="haha"></div>
+          </li>
+          <li data-flag="e">
+            <a href="javascript:;">9999</a>
+            <div class="haha"></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+  <script>
+    //   http://s8.qhimg.com/share/audio/piano1/g4.mp3
+    window.onload = function () {
+      let liNodes = document.querySelectorAll(".test>li");
+      let audio = document.querySelector("audio");
+      for (var i = 0; i < liNodes.length; i++) {
+        liNodes[i].addEventListener("mouseenter", function () {
+          let flag = this.getAttribute("data-flag");
+          if (flag) {
+            audio.src =
+              "http://s8.qhimg.com/share/audio/piano1/" + flag + "4.mp3";
+
+            audio.play();
+          }
+        });
+      }
+    };
+  </script>
+</html>

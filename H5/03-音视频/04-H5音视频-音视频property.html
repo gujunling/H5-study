@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-音视频-property</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .test {
+        outline: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <video
+      class="test"
+      src="./resource/video/test.mp4"
+      controls="controls"
+      autoplay
+      muted
+    ></video>
+    <audio
+      class="test"
+      src="./resource/audio/test.mp3"
+      controls="controls"
+      loop
+      muted
+    ></audio>
+  </body>
+  <script>
+    window.onload = function () {
+      let video = document.querySelector("video");
+      let audio = document.querySelector("audio");
+
+      video.addEventListener("suspend", function () {
+        // 媒体总时间(只读)
+        console.log("video.duration", video.duration);
+      });
+      audio.addEventListener("suspend", function () {
+        console.log("audio.duration", audio.duration);
+      });
+      // setInterval(() => {
+      //   console.log("video.currentTime", video.currentTime);
+      // }, 1000);
+      video.addEventListener("ended", () => {
+        console.log("结束啦");
+        // 是否播放完毕(只读)
+        console.log("video ended", video.ended);
+        console.log("audio ended", audio.ended);
+      });
+      // 是否静音
+      console.log(video.muted);
+      console.log(audio.muted);
+      // 音量大小
+      // muted和volume之间不会同步，为了保证同步，所以每次书写其中一个属性时，需要手动将另外一个值设置成相对应的值
+      console.log(video.volume);
+      console.log(audio.volume);
+      // 是否暂停(只读)
+      console.log("video.paused", video.paused);
+      console.log("audio.paused", audio.paused);
+    };
+  </script>
+</html>

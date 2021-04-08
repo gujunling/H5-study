@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-音视频-函数</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .test {
+        outline: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <video
+      class="test"
+      src="./resource/video/test.mp4"
+      controls="controls"
+      muted
+    ></video>
+    <audio
+      class="test"
+      src="./resource/audio/test.mp3"
+      controls="controls"
+      muted
+    ></audio>
+  </body>
+  <script>
+    window.onload = function () {
+      let video = document.querySelector("video");
+      let audio = document.querySelector("audio");
+      video.play();
+
+      setTimeout(() => {
+        video.pause();
+      }, 10000);
+      setTimeout(() => {
+        video.load();
+      }, 50000);
+    };
+  </script>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <title>前端小记-视频播放器练习</title>
+  </head>
+  <body>
+    <div id="wrap">
+      <video
+        src="https://s3.bytecdn.cn/aweme/resource/web/static/image/index/new-tvc_889b57b.mp4"
+      ></video>
+      <div class="control">
+        <div class="btns">
+          <span class="start"></span>
+          <span class="stop"></span>
+        </div>
+        <div class="progress">
+          <div class="wrap">
+            <div class="inner"></div>
+          </div>
+          <div class="deeppink"></div>
+        </div>
+        <div class="others">
+          <div class="time">
+            <span class="now">00:00:00</span>/<span class="all">00:00:00</span>
+          </div>
+          <div class="sound">
+            <div class="switch">
+              <span></span>
+            </div>
+            <div class="progress">
+              <div class="wrap">
+                <div class="inner"></div>
+              </div>
+              <div class="deeppink"></div>
+            </div>
+          </div>
+          <div class="full-screen">
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="js/drag.js"></script>
+  <script type="text/javascript">
+    window.onload = function () {
+      let video = document.querySelector("#wrap > video");
+      let control = document.querySelector("#wrap > .control");
+      let progress = document.querySelector("#wrap > .control > .progress ");
+      let inner = document.querySelector(
+        "#wrap > .control > .progress > .wrap > .inner "
+      );
+      let deeppink = document.querySelector(
+        "#wrap > .control > .progress > .deeppink "
+      );
+      let start = document.querySelector("#wrap  .btns .start");
+      let stop = document.querySelector("#wrap  .btns .stop");
+      let allSpan = document.querySelector("#wrap > .control >.others .all");
+      let nowSpan = document.querySelector("#wrap > .control >.others .now");
+
+      let switchNode = document.querySelector(
+        "#wrap > .control >.others >.sound .switch"
+      );
+      let switchSpan = document.querySelector(
+        "#wrap > .control >.others >.sound .switch > span"
+      );
+
+      let progress2 = document.querySelector(
+        "#wrap > .control >.others  .progress "
+      );
+      let inner2 = document.querySelector(
+        "#wrap > .control >.others .progress > .wrap > .inner "
+      );
+      let deeppink2 = document.querySelector(
+        "#wrap > .control >.others .progress > .deeppink "
+      );
+
+      let fullScreen = document.querySelector(
+        "#wrap > .control >.others .full-screen "
+      );
+      let fullScreenSpan = document.querySelector(
+        "#wrap > .control >.others .full-screen > span"
+      );
+
+      video.width = document.documentElement.clientWidth;
+      video.height =
+        document.documentElement.clientHeight - control.offsetHeight;
+
+      window.onresize = function () {
+        if (document.documentElement.clientWidth >= 600) {
+          video.width = document.documentElement.clientWidth;
+          video.height =
+            document.documentElement.clientHeight - control.offsetHeight;
+        }
+      };
+
+      //功能
+      let timer = 0;
+      //同步音量
+      let flag = 0;
+      //全屏标志
+      let isFullScreen = false;
+      player();
+      function player() {
+        //全屏
+        fullScreen.onclick = function () {
+          if (isFullScreen) {
+            // 全屏 ---> 不是全屏 --> remove
+            removeClass(fullScreenSpan, "active");
+            isFullScreen = false;
+            if (document.exitFullscreen) {
+              document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+              document.mozCancelFullScreen();
+            } else if (document.webkitCancelFullScreen) {
+              document.webkitCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+              document.msExitFullscreen();
+            }
+          } else {
+            addClass(fullScreenSpan, "active");
+            isFullScreen = true;
+            let docElm = document.documentElement;
+            //W3C
+            if (docElm.requestFullscreen) {
+              docElm.requestFullscreen();
+            }
+            //FireFox
+            else if (docElm.mozRequestFullScreen) {
+              docElm.mozRequestFullScreen();
+            }
+            //Chrome等
+            else if (docElm.webkitRequestFullScreen) {
+              docElm.webkitRequestFullScreen();
+            }
+            //IE11
+            else if (docElm.msRequestFullscreen) {
+              docElm.msRequestFullscreen();
+            }
+          }
+        };
+
+        //音量的控制
+        inner2.style.left = deeppink2.style.width =
+          progress2.clientWidth - inner2.offsetWidth + "px";
+        switchNode.onclick = function () {
+          if (video.muted) {
+            //静音 ---> 不静音 ---> 没有x的那个
+            video.muted = false;
+            video.volume = 1;
+            removeClass(switchSpan, "active");
+
+            flag = flag == 0 ? 1 : flag;
+            inner2.style.left = deeppink2.style.width =
+              (progress2.clientWidth - inner2.offsetWidth) * flag + "px";
+          } else {
+            video.muted = true;
+            video.volume = 0;
+            addClass(switchSpan, "active");
+            inner2.style.left = deeppink2.style.width = 0 + "px";
+          }
+        };
+
+        //时间显示
+        video.addEventListener("loadeddata", function () {
+          allSpan.innerHTML = changeTime(video.duration);
+        });
+
+        //进度条
+        progress.onclick = function (ev) {
+          ev = ev || event;
+          addClass(start, "active");
+          video.play();
+          timer = setInterval(move, 100);
+
+          video.currentTime =
+            video.duration *
+            ((ev.clientX - this.offsetLeft) /
+              (progress.clientWidth - inner.offsetWidth));
+        };
+
+        //按钮排
+        stop.onclick = function () {
+          removeClass(start, "active");
+          video.pause();
+          clearInterval(timer);
+
+          inner.style.left = deeppink.style.width = 0 + "px";
+          video.currentTime = 0;
+        };
+        start.onclick = function () {
+          if (video.paused) {
+            //暂停 ---> 播放  ---> 显示暂停按钮
+            addClass(this, "active");
+            video.play();
+            timer = setInterval(move, 100);
+          } else {
+            removeClass(this, "active");
+            video.pause();
+            clearInterval(timer);
+          }
+        };
+        function move() {
+          inner.style.left = deeppink.style.width =
+            (video.currentTime / video.duration) *
+              (progress.clientWidth - inner.offsetWidth) +
+            "px";
+          nowSpan.innerHTML = changeTime(video.currentTime);
+        }
+      }
+
+      //进度条小滑块拖拽时的逻辑
+      let callback = {
+        move: function () {
+          deeppink.style.width = this.offsetLeft + "px";
+          let scale =
+            this.offsetLeft / (progress.clientWidth - inner.offsetWidth);
+          video.currentTime = video.duration * scale;
+          nowSpan.innerHTML = changeTime(video.currentTime);
+        },
+      };
+      //音量条小滑块拖拽时的逻辑
+      let callback2 = {
+        move: function () {
+          deeppink2.style.width = this.offsetLeft + "px";
+          let scale =
+            this.offsetLeft / (progress2.clientWidth - inner2.offsetWidth);
+          flag = scale;
+          video.volume = scale;
+          if (video.volume == 0) {
+            video.muted = true;
+            addClass(switchSpan, "active");
+          } else {
+            removeClass(switchSpan, "active");
+            video.muted = false;
+          }
+        },
+      };
+      $.drag(inner, callback);
+      $.drag(inner2, callback2);
+
+      //工具类
+      function changeTime(time) {
+        time = parseInt(time);
+
+        let h = toZero(Math.floor(time / 3600));
+        let m = toZero(Math.floor((time % 3600) / 60));
+        let s = toZero(Math.round(time % 3600));
+
+        return h + ":" + m + ":" + s;
+      }
+
+      function toZero(num) {
+        let val = "";
+        if (num < 10) {
+          val = "0" + num;
+        } else {
+          val = val + num;
+        }
+        return val;
+      }
+
+      function addClass(node, className) {
+        let reg = new RegExp("\\b" + className + "\\b");
+        if (!reg.test(node.className)) {
+          node.className += " " + className;
+        }
+      }
+      function removeClass(node, className) {
+        if (node.className) {
+          let reg = new RegExp("\\b" + className + "\\b");
+          let classes = node.className;
+          node.className = classes.replace(reg, "");
+          if (/^\s*$/g.test(node.className)) {
+            node.removeAttribute("class");
+          }
+        } else {
+          node.removeAttribute("class");
+        }
+      }
+    };
+  </script>
+</html>
