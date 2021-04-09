@@ -108,7 +108,19 @@
       let liNodes = document.querySelectorAll(".test>li");
       let audio = document.querySelector("audio");
       for (var i = 0; i < liNodes.length; i++) {
-        liNodes[i].addEventListener("mouseenter", function () {
+        // liNodes[i].addEventListener("mouseenter", function () {
+        //   let flag = this.getAttribute("data-flag");
+        //   if (flag) {
+        //     audio.src =
+        //       "http://s8.qhimg.com/share/audio/piano1/" + flag + "4.mp3";
+
+        //     audio.play();
+        //   }
+        // });
+
+        // 因为浏览器的规则，所以声音需要用户手动去操作，所以mouseenter事件可能无法响应，在控制台会报错，
+        // 为了解决这个问题，迁就于浏览器的规则，所以改成点击事件，在hover的时候，元素会被其他颜色覆盖，同时，鼠标点击的时候会发出声音
+        liNodes[i].onclick = function () {
           let flag = this.getAttribute("data-flag");
           if (flag) {
             audio.src =
@@ -116,7 +128,7 @@
 
             audio.play();
           }
-        });
+        };
       }
     };
   </script>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>前端小记-视频和canvas相结合</title>
+    <style type="text/css">
+      * {
+        margin: 0px;
+        padding: 0px;
+      }
+      .test {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!--放映机-->
+    <video
+      src="https://s3.bytecdn.cn/aweme/resource/web/static/image/index/new-tvc_889b57b.mp4"
+      width="0"
+      height="0"
+    ></video>
+    <!--荧幕-->
+    <canvas class="test" width="300" height="300"></canvas>
+  </body>
+  <script type="text/javascript">
+    window.onload = function () {
+      let canvas = document.querySelector(".test");
+      let video = document.querySelector("video");
+      if (canvas.getContext) {
+        let ctx = canvas.getContext("2d");
+
+        video.addEventListener("loadeddata", function () {
+          setInterval(function () {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          });
+        });
+
+        // 为了解决浏览器不让自动播放带声音的视频的问题，需要手动在canvas画布上（实际显示的视频的第一帧）点击一下才会播放
+        canvas.onclick = function () {
+          console.log("哈哈哈哈");
+          video.play();
+        };
+      }
+    };
+  </script>
+</html>

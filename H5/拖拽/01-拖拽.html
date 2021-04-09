@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端小记-拖拽</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .wrap {
+        position: relative;
+        height: 100%;
+        background: #bfa;
+      }
+      .wrap > .test {
+        position: absolute;
+        left: 100px;
+        top: 100px;
+        background: pink;
+        width: 200px;
+        height: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="test"></div>
+    </div>
+  </body>
+  <script>
+    /*拖拽的思路：
+        1.拿到鼠标点击元素时，元素一开始的位置
+
+        2.拿到鼠标移动的距离
+                 拿到鼠标点击的位置，拿到鼠标移动时实时的位置，
+                       鼠标移动的实时位置 = 鼠标移动时实时的位置 - 鼠标点击的位置
+
+        3.确定鼠标移动后元素的位置(元素一开始的位置+鼠标移动的距离)
+    */
+    window.onload = function () {
+      // 获取元素
+      let testNode = document.querySelector(".wrap > .test");
+
+      let startPoint = { x: 0, y: 0 };
+      // 鼠标按下时的位置
+      let mouseDownPoint = { x: 0, y: 0 };
+      // 鼠标移动时的位置
+      let mouseMovePoint = { x: 0, y: 0 };
+      // 鼠标移动的距离
+      let dis = { x: 0, y: 0 };
+
+      // 为了在下面可以更方便的清除鼠标移动事件和鼠标抬起事件，此时选择使用dom0事件
+      testNode.onmousedown = function (ev) {
+        //1.拿到鼠标点击元素时，元素一开始的位置
+        // 此时的offsetLeft是相对于整个视口的，因为此时的包含块就是初始包含块就是视口
+        startPoint.x = this.offsetLeft;
+        startPoint.y = this.offsetTop;
+
+        // 2.拿到鼠标点击元素时，鼠标一开始的位置
+        // 此时的ev.clientX也是参照于视口的
+        mouseDownPoint.x = ev.clientX;
+        mouseDownPoint.y = ev.clientY;
+
+        // 鼠标移动事件必须在鼠标按下事件之后才能触发，所以将mousemove事件放到mousedown事件的内部
+        document.onmousemove = function (ev) {
+          mouseMovePoint.x = ev.clientX;
+          mouseMovePoint.y = ev.clientY;
+          dis.x = mouseMovePoint.x - mouseDownPoint.x;
+          dis.y = mouseMovePoint.y - mouseDownPoint.y;
+
+          testNode.style.left = startPoint.x + dis.x + "px";
+          testNode.style.top = startPoint.y + dis.y + "px";
+        };
+        // 当鼠标抬起的时候将鼠标移动事件和鼠标抬起事件清除，防止鼠标抬起之后再移动鼠标导致元素跟着移动
+        document.onmouseup = function () {
+          document.onmousemove = document.onmouseup = null;
+        };
+        // 禁止浏览器的默认行为
+        return false;
+      };
+    };
+  </script>
+</html>
